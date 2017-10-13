@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<connector xmlns="http://java.sun.com/xml/ns/j2ee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+  http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd" version="1.5">
+
+  <!--
+      This deployment descriptor defines the Calculator example resource adapter, which is
+      a JCA 1.5 adapter.  However, this simple adapter just supports the outbound mode of
+      operation, where J2EE clients connect to it and request operations.  It doesn't use
+      the standard Common Client Interface (CCI) client interface, but rather defines
+      its own (CalculatorConnection).
+  -->
+  <display-name>Calculator Resource Adapter</display-name>
+  <vendor-name>BGI</vendor-name>
+  <eis-type>Integer Calculator</eis-type>
+  <resourceadapter-version>2.0.0</resourceadapter-version>
+  <resourceadapter>
+        <resourceadapter-class>com.artechra.jcacalculator.impl.CalculatorResourceAdapter</resourceadapter-class>
+        <config-property>
+          <config-property-name>CalculationType</config-property-name>
+          <config-property-type>java.lang.String</config-property-type>
+          <config-property-value>ADD</config-property-value> 
+        </config-property>
+        <outbound-resourceadapter>
+			<connection-definition>
+				<managedconnectionfactory-class>
+                    com.artechra.jcacalculator.impl.CalculatorManagedConnectionFactoryImpl
+                </managedconnectionfactory-class>
+				<connectionfactory-interface>com.artechra.jcacalculator.CalculatorConnectionFactory</connectionfactory-interface>
+				<connectionfactory-impl-class>com.artechra.jcacalculator.impl.CalculatorConnectionFactoryImpl</connectionfactory-impl-class>
+				<connection-interface>com.artechra.jcacalculator.CalculatorConnection</connection-interface>
+				<connection-impl-class>com.artechra.jcacalculator.impl.CalculatorConnectionImpl</connection-impl-class>
+			</connection-definition>
+			<transaction-support>NoTransaction </transaction-support>
+			<reauthentication-support>false </reauthentication-support>
+		</outbound-resourceadapter>
+  </resourceadapter>
+</connector>

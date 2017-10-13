@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+  == This build file is used to create the "Calculator" module in the
+  == sample JCA adapter.  This is a standalone library that performs
+  == simple calculations and shows how a JCA adapter would "wrap" an
+  == external library.
+-->
+<project name="calculator">
+    <property environment="env"/>
+    <property name="build.dir" location="build"/>
+    <property name="build.sysclasspath" value="ignore"/>
+    <property name="src.dir" location="src"/>
+    <property name="output.file" location="calculator.jar"/>
+
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <target name="build" depends="init">
+        <javac srcdir="${src.dir}" destdir="${build.dir}" debug="true"/>
+        <jar destfile="${output.file}" basedir="${build.dir}" 
+             includes="com/**"/>
+    </target>
+
+    <target name="dist" depends="build"/>
+
+    <target name="clean">
+        <delete file="${output.file}"/>
+        <delete dir="${build.dir}"/>
+    </target>
+
+
+</project>

@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!--
+  == This build file creates the J2EE application that includes the
+  == example JCA adapter and also the webapp that is used to test it.
+  == It relies on build files in the subdirectories to do most of
+  == the work and just packages the results.
+-->
+<project name="CalculatorJca" default="help">
+
+    <property name="ear" location="jcacalculator.ear"/>
+    <property name="app.name" value="JcaCalculator"/>
+    <property name="user" value="weblogic"/>
+    <property name="password" value="weblogic"/>
+    <property name="servername" value="AdminServer"/>
+    <property name="adminurl" value="iiop://localhost:7001"/>
+
+    <!-- Print's out the project help -->
+    <target name="help">
+        <java fork="no" classname="org.apache.tools.ant.Main">
+            <arg line="-projecthelp"/>
+        </java>
+    </target>
+
+    <target name="build" description="Build the EAR containing the RAR and WAR">
+        <ant dir="calculator" target="dist"/>
+        <ant dir="adapter" target="dist"/>
+        <ant dir="webapp" target="dist"/>
+        <!-- 
+             Note that the calculator is packaged inside the RAR so that's
+             why it doesn't appear here
+        -->
+        <ear destfile="${ear}" appxml="META-INF/application.xml">
+            <metainf dir="META-INF" includes="weblogic*"/>
+            <fileset dir="adapter" includes="*.rar"/>
+            <fileset dir="webapp" includes="*.war"/>
+        </ear>
+    </target>
+
+    <target name="clean" description="Remove all built targets">
+        <delete file="${ear}"/>
+        <ant dir="calculator" target="clean"/>
+        <ant dir="adapter" target="clean"/>
+        <ant dir="webapp" target="clean"/>
+    </target>
+
+    <!--
+        Deploys the entire JcaAdapterApp application.  This uses a BEA specific
+        Ant task so you need to run setDomainEnv.cmd before trying this.
+    -->
+    <target name="deploy" 
+     description="Deploys (or redeploys) the entire JcaAdapterApp application">
+        <wldeploy user="${user}" password="${password}" adminurl="${adminurl}"
+                  action="deploy" source="${ear}" name="${app.name}"/>
+    </target>
+
+    <!--
+        Undeploys the entire JcaAdapterApp application.  This uses a BEA 
+        specific Ant task so you need to run setDomainEnv.cmd before trying this
+    -->
+    <target name="undeploy"
+            description="Undeploys the entire JcaAdapterApp application">
+        <wldeploy user="${user}" password="${password}" adminurl="${adminurl}"
+                  action="undeploy" name="${app.name}" failonerror="false"/>
+    </target>
+</project>
+

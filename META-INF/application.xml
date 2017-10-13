@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4">
+  <description>J2EE Example With JCA Adapter</description>
+  <display-name>Simple JCA Adapter App</display-name>
+  <module>
+    <connector>jcacalculator.rar</connector>
+  </module>
+  <module>
+    <web>
+      <web-uri>calcwebapp.war</web-uri>
+      <context-root>testapp</context-root>
+    </web>
+  </module>
+</application>

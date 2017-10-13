@@ -1,0 +1,49 @@
+<?xml version = "1.0"?>
+<weblogic-connector xmlns="http://www.bea.com/ns/weblogic/90">
+    <!--
+        To allow the adapter to be used outside its containing EAR then
+        uncomment the following entry.  This is meant to make an adapter
+        packaged within an EAR globally available.
+    <enable-access-outside-app>true</enable-access-outside-app>
+    -->
+
+    <!--
+        The following setting is needed if you want the adapter's classes
+        to be visible outside the EAR.  If you use any types which are
+        defined within the adapter as parameter types in the connection
+        factory then you need to set this to "true" otherwise deployment
+        fails.  This is probably a WLS fault, but it's easy enough to
+        live with.
+    -->
+    <enable-global-access-to-classes>true</enable-global-access-to-classes>
+
+    <!--
+        The adapter will use the default work manager, but if you want it to use
+        a specific WM, uncomment and update the following entry accordingly
+    <work-manager>
+        <name>SimpleJcaWorkManager</name>
+        <min-threads-constraint>
+            <name>FiveThreads</name>
+            <count>5</count>
+        </min-threads-constraint>
+        <max-threads-constraint>
+            <name>TwentyThreads</name>
+            <count>20</count>
+        </max-threads-constraint>
+    </work-manager>
+    -->
+    <!--
+        This configuration group is used to set WLS specific settings for the outbound
+         connection contract, specifically here it is used to define the JNDI name to
+         bind the connection factory instance to, that allows applications to
+         find the adapter and get a connection to it.
+    -->
+    <outbound-resource-adapter>
+        <connection-definition-group>
+            <connection-factory-interface>com.artechra.jcacalculator.CalculatorConnectionFactory</connection-factory-interface>
+            <connection-instance>
+                <jndi-name>jca/CalculatorJcaAdapter</jndi-name>
+            </connection-instance>
+        </connection-definition-group>
+    </outbound-resource-adapter>
+</weblogic-connector>

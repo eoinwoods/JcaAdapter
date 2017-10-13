@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+  == This build file is used to build a very simple webapp which
+  == can be used to test the Calculator JCA Adapter.
+  == The webapp just comprises a single servlet that calls the adapter
+  == in a couple of different ways
+-->
+<project name="calculatorwebapp">
+    <property environment="env"/>
+    <property name="build.sysclasspath" value="ignore"/>
+    <property name="bea.server.dir"
+              location="${env.BEA_HOME}/wlserver_10.0/server"/>
+    <property name="calculator.interface.jar" 
+        location="../adapter/calculatoradapter.jar"/>
+    <property name="output.dir" location="build/WEB-INF"/>
+    <property name="build.dir" location="${output.dir}/classes"/>
+    <property name="lib.dir" location="${output.dir}/lib"/>
+    <property name="src.dir" location="src"/>
+    <property name="output.file" location="calcwebapp.war"/>
+
+    <path id="build.cp">
+        <!-- Needed for adapter interface classes -->
+        <dirset dir="../adapter/build"/>
+        <!-- J2EE definitions -->
+        <fileset file="${bea.server.dir}/lib/api.jar"/> 
+    </path>
+
+    <target name="init" 
+        description="Initialise the build (called automatically)">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${lib.dir}"/>
+    </target>
+
+    <target name="build" depends="init" 
+        description="Compile the code and create the output archives">
+        <javac srcdir="${src.dir}" destdir="${build.dir}" 
+               classpathref="build.cp" debug="true"/>
+        <copy todir="${output.dir}">
+             <fileset dir="WEB-INF"/>
+        </copy>
+        <jar destfile="${output.file}" basedir="build"/>
+    </target>
+
+    <target name="dist" depends="build" 
+        description="Create the distributable archives (just calls build)"/>
+
+    <target name="clean" description="Remove all built targets">
+        <delete file="${output.file}"/>
+        <delete dir="build"/>
+    </target>
+
+</project>

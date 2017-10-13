@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+  == This build file is used to create the Calculator JCA adapter
+  == module, which is a very simple JCA 1.5 adapter that allows a
+  == trivial calculator to be wrapped and accessed via the JCA adapter's
+  == interface
+-->
+<project name="calculatoradapter">
+    <property environment="env"/>
+    <property name="build.sysclasspath" value="ignore"/>
+    <property name="bea.server.dir" 
+              location="${env.BEA_HOME}/wlserver_10.0/server"/>
+    <property name="calculator.jar" location="../calculator/calculator.jar"/>
+    <property name="build.dir" location="build"/>
+    <property name="src.dir" location="src"/>
+    <property name="output.file" location="jcacalculator.rar"/>
+    <property name="adapter.jar" 
+              location="${build.dir}/calculatoradapterimpl.jar"/>
+
+    <path id="build.cp">
+        <fileset file="${bea.server.dir}/lib/api.jar"/> <!-- J2EE definitions -->
+        <fileset file="${calculator.jar}"/>  <!-- The calculator that this adapter wraps -->
+    </path>
+
+    <target name="init" description="Initialise the build environment (called automatically)">
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <target name="build" depends="init" description="Compile the code and build the main Jar">
+        <javac srcdir="${src.dir}" destdir="${build.dir}" 
+               classpathref="build.cp" debug="true"/>
+        <jar destfile="${adapter.jar}" basedir="${build.dir}" includes="com/**"/>
+    </target>
+
+    <target name="dist" depends="build" description="Create the adapter's RAR">
+        <jar destfile="${output.file}">
+            <zipfileset dir="META-INF" prefix="META-INF"/>
+            <fileset file="${calculator.jar}"/>
+            <fileset file="${adapter.jar}"/>
+        </jar>
+    </target>
+
+    <target name="clean" description="Remove all built targets">
+        <delete file="${output.file}"/>
+        <delete file="${adapter.interface.jar}"/>
+        <delete file="${adapter.jar}"/>
+        <delete dir="${build.dir}"/>
+    </target>
+
+    
+</project>
